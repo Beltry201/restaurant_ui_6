@@ -4,15 +4,8 @@ import 'package:restaurant_ui_6/Style/Colors.dart';
 class CartScreen extends StatelessWidget {
   CartScreen({Key key}) : super(key: key);
 
-  // CartScreen({
-  // @required this.imgUrl,
-  // @required this.itemName,
-  // @required this.itemPrice
-  // });
 
-  // final double itemPrice;
-  // final String itemName;
-  // final String imgUrl;
+
 
   @override
   Widget build(BuildContext context) {
