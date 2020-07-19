@@ -168,24 +168,30 @@ class WhiteContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(
-      children: [
+      children: <Widget>[
+        Container(
+          height: MediaQuery.of(context).size.height - 70.0,
+          width: MediaQuery.of(context).size.width,
+          color: Colors.transparent
+        ),
         Positioned(
           top: 105.0,
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(80.0),
-                topRight: Radius.circular(80.0),
+                topLeft: Radius.circular(40.0),
+                topRight: Radius.circular(40.0),
               ),
-              color: Colors.white
-            ),
+              color: Colors.white),
             height: MediaQuery.of(context).size.height - 100.0,
             width: MediaQuery.of(context).size.width
           )
         ),
         Positioned( //image
           top: 30.0,
-          left: (MediaQuery.of(context).size.width / 2) - 100.0,
+          left: (MediaQuery.of(context).size.width / 2) - 100.0,              
+          height: 200.0,
+          width: 200.0,
           child: Container(
             decoration: BoxDecoration(
               boxShadow: [
@@ -193,8 +199,7 @@ class WhiteContainer extends StatelessWidget {
                   color: Colors.black.withOpacity(0.3),
                   spreadRadius: 2,
                   blurRadius: 27,
-                  offset: Offset(7, 23)
-                )
+                  offset: Offset(7, 23))
               ],
               shape: BoxShape.circle,
               image: DecorationImage(
@@ -203,8 +208,8 @@ class WhiteContainer extends StatelessWidget {
               )
             ),
           )
-        )
-      ]
+        ),
+      ],
     );
   }
 }
