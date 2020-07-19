@@ -214,6 +214,36 @@ class WhiteContainer extends StatelessWidget {
   }
 }
 
+class CustomButton extends StatelessWidget {
+  CustomButton({@required this.onPressed});
+  final GestureTapCallback onPressed;
+
+
+ 
+  @override
+  Widget build(BuildContext context) {
+    return RawMaterialButton(
+      fillColor: buttonGreenColor,
+      splashColor: buttonGreenColor,
+      padding: EdgeInsets.only(left: 50,right: 50,),
+      child: Padding(
+        padding: EdgeInsets.all(10.0),
+        child: Text(
+          "Add",
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: 'PlayfairDisplay',
+            fontSize: 26
+          ),
+        ),
+      ),
+      onPressed: onPressed,
+      shape: StadiumBorder(),
+    );
+  }
+}
+
+
 class AddButton extends StatelessWidget {
   @override
 
@@ -226,6 +256,7 @@ class AddButton extends StatelessWidget {
   final Item item;
   final CartListBloc bloc = BlocProvider.getBloc<CartListBloc>();
 
+
   addToCartList(Item item) {
     bloc.addToList(item);
   }
@@ -233,8 +264,8 @@ class AddButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment(0,0.85),
-      child: GestureDetector(
-        onTap: () {
+      child: CustomButton(
+        onPressed: () {
           addToCartList(item);
           final snackBar = SnackBar(
             content: RichText(
@@ -251,26 +282,26 @@ class AddButton extends StatelessWidget {
           );
           Scaffold.of(context).showSnackBar(snackBar);
         },
-        child: Container(
-          height: 60,
-          width: 220,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(38),
-            color: Colors.greenAccent[400]
-          ),
-          child: Center(
-            child: Text(
-              'Add',
-              style: TextStyle(
-                fontFamily: 'PlayfairDisplay',
-                fontSize: 26,
-                color: Colors.white,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 3
-              ),
-            ),
-          ),
-        )
+        // child: Container(
+        //   height: 60,
+        //   width: 220,
+        //   decoration: BoxDecoration(
+        //     borderRadius: BorderRadius.circular(38),
+        //     color: Colors.greenAccent[400],
+        //   ),
+        //   child: Center(
+        //     child: Text(
+        //       'Add',
+        //       style: TextStyle(
+        //         fontFamily: 'PlayfairDisplay',
+        //         fontSize: 26,
+        //         color: Colors.white,
+        //         fontWeight: FontWeight.w800,
+        //         letterSpacing: 3
+        //       ),
+        //     ),
+        //   ),
+        // )
       ),
     );
   }
