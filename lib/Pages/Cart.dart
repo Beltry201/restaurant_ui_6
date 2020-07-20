@@ -1,107 +1,368 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:restaurant_ui_6/Bloc/cartListBloc.dart';
+import 'package:restaurant_ui_6/Model/Items.dart';
 import 'package:restaurant_ui_6/Style/Colors.dart';
+import 'package:bloc_pattern/bloc_pattern.dart';
 
-class CartScreen extends StatelessWidget {
-  CartScreen({Key key}) : super(key: key);
-
-
-
-
+class Cart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
-
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: gradientColor,
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter
-        )
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: CustomAppBar(
-          height: 110,
-          child: Stack(
-            children: <Widget>[
-              Title(),
-              BackIcon()
-            ],
-          )
-        ),
-      ),
+    final CartListBloc bloc = BlocProvider.getBloc<CartListBloc>();
+    List<Item> items;
+    return StreamBuilder(
+      stream: bloc.listStream,
+      builder: (context, snapshot) {
+        if (snapshot.data != null) {
+          items = snapshot.data;
+          return Scaffold(
+            body: SafeArea(
+              child: CartBody(items),
+            ),
+            bottomNavigationBar: BottomBar(items),
+          );
+        } else {
+          return Container(
+            child: Text("Something returned null"),
+          );
+        }
+      },
     );
   }
 }
 
-class CustomAppBar extends PreferredSize {
-  final Widget child;
-  final double height;
+class BottomBar extends StatelessWidget {
+  final List<Item> items;
 
-  CustomAppBar({@required this.child, this.height = kToolbarHeight});
-
-  @override
-  Size get preferredSize => Size.fromHeight(height);
+  BottomBar(this.items);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(40),
-            bottomRight: Radius.circular(40),
+      margin: EdgeInsets.only(left: 35, bottom: 25),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          totalAmount(items),
+          Divider(
+            height: 1,
+            color: Colors.grey[700],
           ),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              spreadRadius: 10,
-              blurRadius: 10
-            )
-          ]
-        ),
-      height: preferredSize.height,
-      alignment: Alignment.center,
-      child: child,
+          persons(),
+          nextButtonBar(),
+        ],
+      ),
     );
   }
-}
 
-class Title extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      minimum: EdgeInsets.all(0),
-      child: Container(
-        child: Align(
-          alignment: Alignment(0,-1),
-          child: Text(
-            'Tu Carrito',
+  Container persons() {
+    return Container(
+      margin: EdgeInsets.only(right: 10),
+      padding: EdgeInsets.symmetric(vertical: 30),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text("Persons",
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+              )),
+          CustomPersonWidget(),
+        ],
+      ),
+    );
+  }
+
+  Container totalAmount(List<Item> items) {
+    return Container(
+      margin: EdgeInsets.only(right: 10),
+      padding: EdgeInsets.all(25),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
+            "Total:",
+            style: TextStyle(fontSize: 25, fontWeight: FontWeight.w300),
+          ),
+          Text(
+            "\$${returnTotalAmount(items)}",
+            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 28),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String returnTotalAmount(List<Item> items) {
+    double totalAmount = 0.0;
+
+    for (int i = 0; i < items.length; i++) {
+      totalAmount = totalAmount + items[i].price * items[i].quantity;
+    }
+    return totalAmount.toStringAsFixed(2);
+  }
+
+  Container nextButtonBar() {
+    return Container(
+      margin: EdgeInsets.only(right: 25),
+      padding: EdgeInsets.all(25),
+      decoration: BoxDecoration(
+          color: buttonGreenColor, borderRadius: BorderRadius.circular(15)),
+      child: Row(
+        children: <Widget>[
+          Text(
+            "15-25 min",
             style: TextStyle(
-              fontFamily: 'PlayfairDisplay',
-              fontSize: 40,
-              color: titleGreyColor
+              fontWeight: FontWeight.w800,
+              fontSize: 14,
             ),
           ),
-        ),
+          Spacer(),
+          Text(
+            "Next",
+            style: TextStyle(
+              fontWeight: FontWeight.w900,
+              fontSize: 16,
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-class BackIcon extends StatelessWidget {
+class CustomPersonWidget extends StatefulWidget {
+  @override
+  _CustomPersonWidgetState createState() => _CustomPersonWidgetState();
+}
+
+class _CustomPersonWidgetState extends State<CustomPersonWidget> {
+  int noOfPersons = 1;
+
+  double _buttonWidth = 30;
+
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment(-0.9, 0.2),
-        child: IconButton(
-        icon: Icon(Icons.arrow_back_ios),
-        color: titleGreyColor,
-        onPressed: () {
-          Navigator.of(context).pop();
-        }
+    return Container(
+      margin: EdgeInsets.only(right: 25),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey[300], width: 2),
+        borderRadius: BorderRadius.circular(10),
       ),
+      padding: EdgeInsets.symmetric(vertical: 5),
+      width: 120,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          SizedBox(
+            width: _buttonWidth,
+            height: _buttonWidth,
+            child: FlatButton(
+              padding: EdgeInsets.all(0),
+              onPressed: () {
+                setState(() {
+                  if (noOfPersons > 1) {
+                    noOfPersons--;
+                  }
+                });
+              },
+              child: Text(
+                "-",
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
+              ),
+            ),
+          ),
+          Text(
+            noOfPersons.toString(),
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
+          ),
+          SizedBox(
+            width: _buttonWidth,
+            height: _buttonWidth,
+            child: FlatButton(
+              padding: EdgeInsets.all(0),
+              onPressed: () {
+                setState(() {
+                  noOfPersons++;
+                });
+              },
+              child: Text(
+                "+",
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CartBody extends StatelessWidget {
+  final List<Item> items;
+
+  CartBody(this.items);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(35, 40, 25, 0),
+      child: Column(
+        children: <Widget>[
+          CustomAppBar(),
+          title(),
+          Expanded(
+            flex: 1,
+            child: items.length > 0 ? itemList() : noItemContainer(),
+          )
+        ],
+      ),
+    );
+  }
+
+  Container noItemContainer() {
+    return Container(
+      child: Center(
+        child: Text(
+          "No More Items Left In The Cart",
+          style: TextStyle(
+              fontWeight: FontWeight.w600,
+              color: Colors.grey[500],
+              fontSize: 20),
+        ),
+      ),
+    );
+  }
+
+  ListView itemList() {
+    return ListView.builder(
+      itemCount: items.length,
+      itemBuilder: (context, index) {
+        return CartListItem(item: items[index]);
+      },
+    );
+  }
+
+  Widget title() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 35),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                "My",
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 35,
+                ),
+              ),
+              Text(
+                "Order",
+                style: TextStyle(
+                  fontWeight: FontWeight.w300,
+                  fontSize: 35,
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class CartListItem extends StatelessWidget {
+  final Item item;
+
+  CartListItem({@required this.item});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 25),
+      child: ItemContent(item: item),
+    );
+  }
+}
+
+
+class ItemContent extends StatelessWidget {
+  const ItemContent({
+    Key key,
+    @required this.item,
+  }) : super(key: key);
+
+  final Item item;
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          ClipRRect(
+            borderRadius: BorderRadius.circular(5),
+            child: Image.network(
+              item.imgUrl,
+              fit: BoxFit.fitHeight,
+              height: 55,
+              width: 80,
+            ),
+          ),
+          RichText(
+            text: TextSpan(
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w700),
+                children: [
+                  TextSpan(
+                    text: item.quantity.toString()
+                    ),
+                  TextSpan(text: " x "),
+                  // TextSpan(
+                  //   text: item.itemName,
+                  // ),
+                ]),
+          ),
+          Text(
+            "\$${item.quantity * item.price}",
+            style:
+                TextStyle(color: Colors.grey[500], fontWeight: FontWeight.w400),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CustomAppBar extends StatelessWidget {
+  final CartListBloc bloc = BlocProvider.getBloc<CartListBloc>();
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: GestureDetector(
+            child: Icon(
+              CupertinoIcons.back,
+              size: 30,
+            ),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+      ],
     );
   }
 }

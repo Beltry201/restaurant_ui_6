@@ -122,7 +122,7 @@ class CartIcon extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => CartScreen()));
+              context, MaterialPageRoute(builder: (context) => Cart()));
         },
         child: Icon(
           Icons.shopping_basket,
