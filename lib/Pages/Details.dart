@@ -282,26 +282,6 @@ class AddButton extends StatelessWidget {
           );
           Scaffold.of(context).showSnackBar(snackBar);
         },
-        // child: Container(
-        //   height: 60,
-        //   width: 220,
-        //   decoration: BoxDecoration(
-        //     borderRadius: BorderRadius.circular(38),
-        //     color: Colors.greenAccent[400],
-        //   ),
-        //   child: Center(
-        //     child: Text(
-        //       'Add',
-        //       style: TextStyle(
-        //         fontFamily: 'PlayfairDisplay',
-        //         fontSize: 26,
-        //         color: Colors.white,
-        //         fontWeight: FontWeight.w800,
-        //         letterSpacing: 3
-        //       ),
-        //     ),
-        //   ),
-        // )
       ),
     );
   }
