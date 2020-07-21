@@ -125,7 +125,7 @@ class CartIcon extends StatelessWidget {
               context, MaterialPageRoute(builder: (context) => Cart()));
         },
         child: Icon(
-          Icons.shopping_basket,
+          Icons.shopping_cart,
           color: titleGreyColor,
           size: 30,
         ),

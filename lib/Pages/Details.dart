@@ -137,6 +137,14 @@ class Texts extends StatelessWidget {
             ]
           )
         ),
+        Positioned(
+          top: 300,
+          child: Divider(
+            height: 100,
+            thickness: 10,
+            color: Colors.grey,
+          ),
+        ),
         Positioned( //Item ingredients
           top: 390.0,
           left: 40.0,
@@ -199,7 +207,8 @@ class WhiteContainer extends StatelessWidget {
                   color: Colors.black.withOpacity(0.3),
                   spreadRadius: 2,
                   blurRadius: 27,
-                  offset: Offset(7, 23))
+                  offset: Offset(7, 23)
+                )
               ],
               shape: BoxShape.circle,
               image: DecorationImage(
@@ -217,8 +226,6 @@ class WhiteContainer extends StatelessWidget {
 class CustomButton extends StatelessWidget {
   CustomButton({@required this.onPressed});
   final GestureTapCallback onPressed;
-
-
  
   @override
   Widget build(BuildContext context) {
