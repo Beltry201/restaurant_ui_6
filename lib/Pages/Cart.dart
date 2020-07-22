@@ -81,28 +81,19 @@ class BottomBar extends StatelessWidget {
 
   Container nextButtonBar() {
     return Container(
+      width: 600,
       margin: EdgeInsets.only(right: 25),
       padding: EdgeInsets.all(25),
       decoration: BoxDecoration(
           color: buttonGreenColor, borderRadius: BorderRadius.circular(15)),
-      child: Row(
-        children: <Widget>[
-          Text(
-            "15-25 min",
-            style: TextStyle(
-              fontWeight: FontWeight.w800,
-              fontSize: 14,
-            ),
+      child: Center(
+              child: Text(
+          "Next",
+          style: TextStyle(
+            fontWeight: FontWeight.w900,
+            fontSize: 16,
           ),
-          Spacer(),
-          Text(
-            "Next",
-            style: TextStyle(
-              fontWeight: FontWeight.w900,
-              fontSize: 16,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -186,14 +177,13 @@ class CartBody extends StatelessWidget {
 
 class CartListItem extends StatelessWidget {
   final Item item;
-
   CartListItem({@required this.item});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: 25),
-      child: ItemContent(item: item),
+      child: ItemContent(item: item,),
     );
   }
 }
@@ -212,39 +202,36 @@ class ItemContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 80,
-      color: Colors.red,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          ClipRRect(
-            borderRadius: BorderRadius.circular(5),
-            child: Image.network(
-              item.imgUrl,
-              fit: BoxFit.fitHeight,
-              height: 55,
-              width: 80,
+          Container(
+            height: 60,
+            width: 60,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                image: NetworkImage(item.imgUrl),
+                fit: BoxFit.fill
+              )
             ),
           ),
           RichText(
             text: TextSpan(
-                style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w700),
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+                fontWeight: FontWeight.w700),
                 children: [
                   TextSpan(
-                    text: item.quantity.toString()
-                    ),
-                  TextSpan(text: " x "),
-                  // TextSpan(
-                  //   text: item.itemName,
-                  // ),
+                    text: item.name,
+                  ),
                 ]),
           ),
-          RaisedButton(
-            onPressed: ()=> item.addQuantity(),
-            child: Icon(Icons.add),
+          Text('x'),
+          Text(
+            item.quantity.toString()
           ),
           Text(
             "\$${item.quantity * item.price}",
