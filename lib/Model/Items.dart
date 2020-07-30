@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:restaurant_ui_6/Pages/Details.dart';
 
 
-
 ItemList itemList = ItemList(items: [
   Item(
     id: 1,
